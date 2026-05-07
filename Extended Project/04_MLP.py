@@ -209,25 +209,7 @@ def main():
         })
     multi_df = pd.DataFrame(records)
     multi_df.to_csv(PROCESSED_DIR / "mlp_multi_seed_results.csv", index=False)
-    print(f"\n  Saved to {PROCESSED_DIR / 'mlp_multi_seed_results.csv'}")
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    means = [np.mean(multi_results[g]) for g in groups]
-    stds = [np.std(multi_results[g]) for g in groups]
-    colors = ["#4575b4", "#fee090", "#d73027"]
-    bars = ax.bar(groups, means, yerr=stds, capsize=5, color=colors, edgecolor="black")
-    ax.set_ylabel("R$^2$")
-    ax.set_title("MLP Multi-Seed R$^2$ (5 seeds)")
-    ax.set_ylim(0, 1)
-    for bar, mean, std in zip(bars, means, stds):
-        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
-                f"{mean:.4f}\n±{std:.4f}", ha="center", va="bottom", fontsize=10)
-    fig.tight_layout()
-    p = FIGURES_DIR / "fig_mlp_multi_seed.png"
-    fig.savefig(p, dpi=300, bbox_inches="tight")
-    print(f"{p.name}")
-    plt.close(fig)
-    print("\nMLP done")
+    print(f"\nSaved to {PROCESSED_DIR / 'mlp_multi_seed_results.csv'}")
 
 
 if __name__ == "__main__":

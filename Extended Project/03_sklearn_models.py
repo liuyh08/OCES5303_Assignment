@@ -149,29 +149,6 @@ results_df.to_csv(PROCESSED_DIR / "sklearn_cmip6_results.csv")
 print(f"\nSaved to {PROCESSED_DIR / 'sklearn_cmip6_results.csv'}")
 
 
-models = ["Ridge", "RF", "XGB"]
-fig, ax = plt.subplots(figsize=(12, 8))
-x = np.arange(len(models))
-width = 0.25
-colors = ["#4575b4", "#fee090", "#d73027"]
-
-for i, (gname, ginfo) in enumerate(GROUPS.items()):
-    vals = [all_results.get(f"{gname}/{m}", {}).get("R2", 0) for m in models]
-    ax.barh(x + i * width, vals, width, label=gname, color=colors[i])
-
-ax.set_yticks(x + width)
-ax.set_yticklabels(models)
-ax.set_xlabel("$R^2$")
-ax.set_title("$R^2$: Physics vs Nutrients vs All (tuned)")
-ax.legend(loc="lower right")
-ax.set_xlim(0, 1)
-fig.tight_layout()
-p = FIGURES_DIR / "fig_group_comparison_cmip6.png"
-fig.savefig(p, dpi=300, bbox_inches="tight")
-print(f"{p.name}")
-plt.close(fig)
-
-
 g3_keys = [k for k in all_results if k.startswith("G3_All")]
 best_g3_key = max(g3_keys, key=lambda k: all_results[k]["R2"])
 best_model_name = best_g3_key.split("/")[1]
@@ -236,5 +213,3 @@ p = FIGURES_DIR / "fig_scatter_best_cmip6.png"
 fig.savefig(p, dpi=300, bbox_inches="tight")
 print(f"{p.name}")
 plt.close(fig)
-
-print("\nsklearn modeling done")

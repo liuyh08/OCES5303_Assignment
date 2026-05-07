@@ -225,22 +225,6 @@ def main():
     print(results_df.round(4).to_string())
     results_df.to_csv(PROCESSED_DIR / "pytorch_lstm_results.csv")
 
-    fig, ax = plt.subplots(figsize=(10, 5))
-    configs = list(all_metrics.keys())
-    r2_vals = [all_metrics[c]["R2"] for c in configs]
-    colors = ["#4575b4" if "seq6" in c else "#d73027" for c in configs]
-    ax.barh(configs, r2_vals, color=colors)
-    ax.set_xlabel("R$^2$")
-    ax.set_title("LSTM: seq_len=6 (blue) vs seq_len=12 (red)")
-    ax.set_xlim(0, 1)
-    fig.tight_layout()
-    p = FIGURES_DIR / "fig_lstm_seq_comparison.png"
-    fig.savefig(p, dpi=300, bbox_inches="tight")
-    print(f"  {p.name}")
-    plt.close(fig)
-
-    print("Multi-Seed Uncertainty Estimation (seq_len=6)")
-
     multi_seeds = [42, 123, 456, 789, 1024]
     multi_results = {g: [] for g in groups}
 
@@ -257,7 +241,6 @@ def main():
             multi_results[group].append(r2)
             print(f"  seed={seed:5d}  {group}  R2={r2:.4f}")
 
-    print("Multi-Seed Uncertainty Estimation")
 
     multi_seeds = [42, 123, 456, 789, 1024]
     multi_results = {}
@@ -285,7 +268,6 @@ def main():
             print(f"  {seq_len:4d}  {group:8s}  {np.mean(vals):8.4f}  {np.std(vals):8.4f}  "
                   f"{min(vals):8.4f}  {max(vals):8.4f}")
 
-    # Save multi-seed results
     records = []
     for seq_len in [6, 12]:
         for group in groups:
@@ -298,32 +280,6 @@ def main():
     multi_df = pd.DataFrame(records)
     multi_df.to_csv(PROCESSED_DIR / "lstm_multi_seed_results.csv", index=False)
     print(f"\n  Saved to {PROCESSED_DIR / 'lstm_multi_seed_results.csv'}")
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    x = np.arange(len(groups))
-    width = 0.3
-    for i, seq_len in enumerate([6, 12]):
-        means = [np.mean(multi_results[seq_len][g]) for g in groups]
-        stds = [np.std(multi_results[seq_len][g]) for g in groups]
-        color = "#4575b4" if seq_len == 6 else "#d73027"
-        bars = ax.bar(x + i * width, means, width, yerr=stds, capsize=5,
-                      color=color, edgecolor="black", label=f"seq={seq_len}")
-        for bar, mean, std in zip(bars, means, stds):
-            ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.01,
-                    f"{mean:.3f}\n±{std:.3f}", ha="center", va="bottom", fontsize=9)
-    ax.set_xticks(x + width / 2)
-    ax.set_xticklabels(groups)
-    ax.set_ylabel("R$^2$")
-    ax.set_title("LSTM Multi-Seed R$^2$ (5 seeds)")
-    ax.set_ylim(0, 1)
-    ax.legend()
-    fig.tight_layout()
-    p = FIGURES_DIR / "fig_lstm_multi_seed.png"
-    fig.savefig(p, dpi=300, bbox_inches="tight")
-    print(f"  {p.name}")
-    plt.close(fig)
-
-    print("\n  LSTM done")
 
 
 if __name__ == "__main__":

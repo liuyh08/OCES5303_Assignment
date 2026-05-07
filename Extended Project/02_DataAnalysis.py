@@ -131,30 +131,15 @@ def fig_correlation(df):
     savefig(fig, "fig_correlation.png")
 
 
-def fig_distributions(df):
-    plot_cols = ["log_chla"] + CMIP6_VARS
-    n = len(plot_cols)
-
-    fig, axes = plt.subplots(1, n, figsize=(3.5 * n, 4))
-    for ax, col in zip(axes, plot_cols):
-        data = df[col].dropna()
-        ax.hist(data, bins=80, color="#4575b4", edgecolor="white", lw=0.3)
-        ax.set_title(col, fontsize=10)
-        ax.set_ylabel("Count")
-    fig.suptitle("Variable Distributions", fontsize=13)
-    fig.tight_layout(rect=[0, 0, 1, 0.94])
-    savefig(fig, "fig_distributions.png")
-
-
 def fig_cmip6_spatial(ds):
     var_info = {
         "mlotst": {"label": "MLD", "unit": "m", "cmap": "RdYlBu_r"},
-        "tos":    {"label": "SST", "unit": "°C", "cmap": "RdYlBu_r"},
-        "no3":    {"label": "NO₃", "unit": "mol/m³", "cmap": "YlOrRd"},
-        "po4":    {"label": "PO₄", "unit": "mol/m³", "cmap": "YlOrRd"},
-        "si":     {"label": "Si", "unit": "mol/m³", "cmap": "YlOrRd"},
-        "dfe":    {"label": "dFe", "unit": "mol/m³", "cmap": "YlOrRd"},
-        "o2":     {"label": "O₂", "unit": "mol/m³", "cmap": "YlGnBu"},
+        "tos": {"label": "SST", "unit": "°C", "cmap": "RdYlBu_r"},
+        "no3": {"label": "NO₃", "unit": "mol/m³", "cmap": "YlOrRd"},
+        "po4": {"label": "PO₄", "unit": "mol/m³", "cmap": "YlOrRd"},
+        "si": {"label": "Si", "unit": "mol/m³", "cmap": "YlOrRd"},
+        "dfe": {"label": "dFe", "unit": "mol/m³", "cmap": "YlOrRd"},
+        "o2": {"label": "O₂", "unit": "mol/m³", "cmap": "YlGnBu"},
     }
 
     n = len(var_info)
@@ -207,11 +192,10 @@ def main():
     print(f"Dataset: {dict(ds.sizes)}")
     print(f"DataFrame: {df.shape}")
 
-    # fig_mean_chla(ds)
-    # fig_seasonal(ds)
-    # fig_timeseries(ds)
-    # fig_correlation(df)
-    # fig_distributions(df)
+    fig_mean_chla(ds)
+    fig_seasonal(ds)
+    fig_timeseries(ds)
+    fig_correlation(df)
     fig_cmip6_spatial(ds)
 
     ds.close()
